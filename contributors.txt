@@ -4,3 +4,4 @@ Name                          Email
 -----------------------------------------------------
 Thien Van Ky Nguyen           nguyet69@unlv.nevada.edu
 Taylor Finelli		      finelt1@unlv.nevada.edu
+Stefano Rubini                rubini@unlv.nevada.edu
