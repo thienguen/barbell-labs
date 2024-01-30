@@ -1,11 +1,9 @@
-import pdb
 import json
 import numpy as np
 import matplotlib.pyplot as plt
 import matplotlib.patches as mpatches
 
 authors = {}
-marker_size = 10
 
 with open('data/scatterplot_data.json', 'r') as f:
     scatterplot_data = json.loads(f.read())
@@ -18,15 +16,21 @@ for i in range(len(filenames)):
 
     for author, weeks in author_data.items():
         if author not in authors:
-            color = (np.round(np.random.rand(),1),
-                    np.round(np.random.rand(),1),
-                    np.round(np.random.rand(),1))
-            authors[author] = color
-        
-        for week in weeks:
-            plt.scatter(i, week, color=authors[author], s=marker_size)
+            authors[author] = {}
+            authors[author]['weeks'] = []
+            authors[author]['files'] = []
+            authors[author]['color'] = (np.round(np.random.rand(),1),
+                                        np.round(np.random.rand(),1),
+                                        np.round(np.random.rand(),1))
 
-plt.legend = [mpatches.Patch(color=color, label=author) for author, color in authors.items()]
+        for week in weeks:
+            authors[author]['weeks'].append(week)
+            authors[author]['files'].append(i)
+
+for author, data in authors.items():
+    plt.scatter(data['files'], data['weeks'], label=author, color=data['color'])
+
+plt.legend(loc='upper left', title='Authors', bbox_to_anchor=(1, 1))
 plt.xlabel('file')
 plt.ylabel('weeks')
 plt.show()
