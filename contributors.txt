@@ -3,5 +3,10 @@ Group 3 Collaborators
 Name                          Email
 -----------------------------------------------------
 Thien Van Ky Nguyen           nguyet69@unlv.nevada.edu
-Taylor Finelli		      finelt1@unlv.nevada.edu
-Miguel Alvarez		      alvarezu@unlv.nevada.edu
+Taylor Finelli		            finelt1@unlv.nevada.edu
+Henry Luong                   luongh3@unlv.nevada.edu
+Stefano Rubini                rubini@unlv.nevada.edu
+Marcos Villanueva Abreu       villam25@unlv.nevada.edu
+Thomas Bryant                 bryant3@unlv.nevada.edu
+Elliot Wesoff                 wesoffe@unlv.nevada.edu
+Miguel Alvarez		            alvarezu@unlv.nevada.edu
