@@ -9,7 +9,7 @@ import datetime
 files = []
 authors = []
 date_string = []
-with open('data/commits_rootbeer.csv') as rootbeer:
+with open('data/thomas_commits_rootbeer.csv') as rootbeer:
     csv_file = csv.DictReader(rootbeer)
     for row in csv_file:
         files.append(row['Filename'])
