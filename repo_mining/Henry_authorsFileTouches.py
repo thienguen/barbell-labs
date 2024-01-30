@@ -21,12 +21,11 @@ def github_auth(url, lsttoken, ct):
         print(e)
     return jsonData, ct
 
-
-# @dictAuthors, empty dictionary of authors and dates
+# @files, List of file names
+# @dictAuth, empty dictionary of Authors
 # @lstTokens, GitHub authentication tokens
 # @repo, GitHub repo
-# @fileData, data from csv file of file names
-def countfiles(dictAuthors, lsttokens, repo, fileNames):
+def countfiles(files, dictAuth, lsttokens, repo):
     ipage = 1  # url page counter
     ct = 0  # token counter
 
@@ -40,60 +39,56 @@ def countfiles(dictAuthors, lsttokens, repo, fileNames):
             # break out of the while loop if there are no more commits in the pages
             if len(jsonCommits) == 0:
                 break
-            # iterate through the list of commits in  spage
+            # iterate through the list of commits in spage
             for shaObject in jsonCommits:
                 sha = shaObject['sha']
                 # For each commit, use the GitHub commit API to extract the files touched by the commit
                 shaUrl = 'https://api.github.com/repos/' + repo + '/commits/' + sha
                 shaDetails, ct = github_auth(shaUrl, lsttokens, ct)
+                
                 filesjson = shaDetails['files']
-                # Get the author and date of commit
                 author = shaDetails['commit']['author']['name']
                 date = shaDetails['commit']['author']['date']
-
+                
                 for filenameObj in filesjson:
                     filename = filenameObj['filename']
-                    if filename in fileNames:
+                    if filename in files:
                         if filename.endswith('.java'):
-                            dictAuthors.append({'file': filename, 'author': author, 'date': date})
-                            print(filename, author, date)
+                            dictAuth.append({'file': filename, 'author': author, 'date': date})
+                        print(author,date)
             ipage += 1
     except:
         print("Error receiving data")
         exit(0)
+        
 # GitHub repo
 repo = 'scottyab/rootbeer'
 # repo = 'Skyscanner/backpack' # This repo is commit heavy. It takes long to finish executing
 # repo = 'k9mail/k-9' # This repo is commit heavy. It takes long to finish executing
 # repo = 'mendhak/gpslogger'
 
+# token
+lstTokens = ["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", "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", "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 "]
 
-# put your tokens here
-# Remember to empty the list when going to commit to GitHub.
-# Otherwise they will all be reverted and you will have to re-create them
-# I would advise to create more than one token for repos with heavy commits
-lstTokens = ["xxx"]
-
-# collect data from file_rootbeer.csv
-fileData = []
-with open('data/file_rootbeer.csv') as file:
+dictAuth = [] #Authors + Dates
+files = [] #File data
+data = repo.split('/')[1]
+with open('data/file_'+ data + '.csv') as file:
     csvFile = csv.DictReader(file)
     for row in csvFile:
-        fileData.append(row['Filename'])
+        files.append(row['Filename'])
+  
+countfiles(files, dictAuth, lstTokens, repo)
+print('Total number of commits: ' + str(len(dictAuth)))
 
-dictAuthors = []
-countfiles(dictAuthors, lstTokens, repo, fileData)
-print('Total number of commits: ' + str(len(dictAuthors)))
-
-file = repo.split('/')[1]
 # change this to the path of your file
-fileOutput = 'data/commits_' + file + '.csv'
+fileOutput = 'data/authors_' + data + '.csv'
 rows = ["Filename", "Author", "Date"]
 fileCSV = open(fileOutput, 'w')
 writer = csv.writer(fileCSV)
 writer.writerow(rows)
 
-for x in dictAuthors:
-    rows = [x['file'], x['author'], x['date']]
+for i in dictAuth:
+    rows = [i['file'],i['author'],i['date']]
     writer.writerow(rows)
 fileCSV.close()
