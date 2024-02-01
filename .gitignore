@@ -1,0 +1,7 @@
+repo_mining/bin
+repo_mining/data
+repo_mining/lib
+repo_mining/lib64
+repo_mining/share
+repo_mining/pyvenv.cfg
+
