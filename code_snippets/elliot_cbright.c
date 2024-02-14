@@ -8,57 +8,58 @@
 #include <string.h>
 #include <sys/stat.h>
 
-int main(int argc, char *argv[])
-{
-  const char file_path[] = "/sys/class/backlight/intel_backlight/brightness";
-  const int max = 120000;
-  const int min = 3000;
-  const int inc = 12000;
-  int cur_b;
-  int new_b;
-  char dir[4];
-  char new_b_str[7];
-  struct stat sb;
+#define FILE_PATH "/sys/class/backlight/intel_backlight/brightness"
+#define MAX_BRIGHTNESS 120000
+#define MIN_BRIGHTNESS 3000
+#define BRIGHTNESS_INCREMENT 12000
 
-  if (stat(file_path, &sb) == -1) {
-    perror("stat");
+void handle_error(const char* message) {
+    fprintf(stderr, "%s\n", message);
     exit(EXIT_FAILURE);
-  }
+}
 
-  FILE* file = fopen(file_path, "w+");
-  char* file_contents = malloc(sb.st_size);
-  fread(file_contents, sb.st_size, 1, file);
+int main(int argc, char *argv[]) {
+    if (argc != 2) {
+        handle_error("Usage: cbright [up|down]");
+    }
 
-  cur_b = atoi(file_contents);
+    struct stat sb;
+    if (stat(FILE_PATH, &sb) == -1) {
+        handle_error("Failed to get file status");
+    }
 
-  memset(dir, '\0', sizeof(dir));
-  strcpy(dir, argv[1]);
+    FILE* file = fopen(FILE_PATH, "r+");
+    if (!file) {
+        handle_error("Failed to open file");
+    }
 
-  if (strcmp("up", dir) == 0) {
-    printf("brightness up\n");
-    new_b = cur_b + inc;
-  } else if (strcmp("down", dir) == 0) {
-    printf("brightness down\n");
-    new_b = cur_b - inc;
-  } else {
-    printf("unknown option: %s\n", dir);
-    new_b = cur_b;
-  }
+    int cur_brightness;
+    fread(&cur_brightness, sizeof(int), 1, file);
 
-  if (new_b > max) {
-    new_b = max;
-  } else if (new_b < min) {
-    new_b = min;
-  }
+    int new_brightness;
+    if (strcmp(argv[1], "up") == 0) {
+        printf("Brightness up\n");
+        new_brightness = cur_brightness + BRIGHTNESS_INCREMENT;
+    } else if (strcmp(argv[1], "down") == 0) {
+        printf("Brightness down\n");
+        new_brightness = cur_brightness - BRIGHTNESS_INCREMENT;
+    } else {
+        handle_error("Unknown option");
+    }
 
-  printf("current brightness: %i\n", cur_b);
-  snprintf(new_b_str, 7, "%i", new_b);
-  printf("new brightness: %s\n", new_b_str);
+    if (new_brightness > MAX_BRIGHTNESS) {
+        new_brightness = MAX_BRIGHTNESS;
+    } else if (new_brightness < MIN_BRIGHTNESS) {
+        new_brightness = MIN_BRIGHTNESS;
+    }
 
-  fwrite(new_b_str, 1, sizeof(new_b_str), file);
+    printf("Current brightness: %i\n", cur_brightness);
+    printf("New brightness: %i\n", new_brightness);
 
-  fclose(file);
-  free(file_contents);
+    fseek(file, 0, SEEK_SET);
+    fwrite(&new_brightness, sizeof(int), 1, file);
 
-  exit(EXIT_SUCCESS);
+    fclose(file);
+
+    exit(EXIT_SUCCESS);
 }
