@@ -13,27 +13,23 @@ def calculate(expression: str) -> int:
     """
     num, stack, sign = 0, [], "+"
     
-    # Function to perform operation based on the current operator
-    def perform_operation():
-        if sign == '+':
-            stack.append(num)
-        elif sign == '-':
-            stack.append(-num)
-        elif sign == '*':
-            stack[-1] = stack[-1] * num
-        elif sign == '/':
-            stack[-1] = int(stack[-1] / num)
-    
     for char in expression:
         if char.isdigit():
             num = num * 10 + int(char)
         elif char in "+-*/":
-            perform_operation()
+            if sign == '+':
+                stack.append(num)
+            elif sign == '-':
+                stack.append(-num)
+            elif sign == '*':
+                stack[-1] *= num
+            elif sign == '/':
+                stack[-1] = int(stack[-1] / num)
             num, sign = 0, char
-        elif char != ' ':
-            raise ValueError("Invalid character '{}' in expression.".format(char))
     
-    # Perform the last operation
-    perform_operation()
+    if sign == '+':
+        stack.append(num)
+    elif sign == '-':
+        stack.append(-num)
     
     return sum(stack)
