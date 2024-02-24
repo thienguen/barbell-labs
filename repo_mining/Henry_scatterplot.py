@@ -6,10 +6,11 @@ import datetime
 import numpy as np
 import random
 
-#initialize arrays
+# initialize arrays
 files = []
 dates = []
 authors = []
+
 # Append data to respective array
 with open('data/authors_rootbeer.csv') as file:
     print()
@@ -18,7 +19,7 @@ with open('data/authors_rootbeer.csv') as file:
         files.append(row['Filename'])
         authors.append(row['Author'])
         dates.append(row['Date'].split('T')[0]) #Separates date into YYYY-MM-DD
-        
+    dates = [datetime.datetime.strptime(row['Date'].split('T')[0], "%Y-%m-%d") for row in reader]  
 
 # Convert Raw Date to Weeks
 weeks = []
@@ -27,14 +28,15 @@ for d in dates:
     date = datetime.datetime.strptime(d, "%Y-%m-%d")
     weeks_from_start = (date - startDate).days // 7
     weeks.append(weeks_from_start)
-
-#Get unique authors
+    
+# Get unique authors
 uniqueAuthors = list(set(authors))
-#Dictionary - Key: Author Value: Color from tab20b
-#Converts cmap[i] to hex
+
+# Dictionary - Key: Author Value: Color from tab20b, Converts cmap[i] to hex
 cmap = plt.get_cmap('tab20b')
-authcolors = dict(zip(uniqueAuthors,[mcolors.to_hex(cmap(i)) for i in range(len(uniqueAuthors))]))
-#Dictionary - Key: file Value: Number
+authcolors = {author: mcolors.to_hex(cmap(i)) for i, author in enumerate(uniqueAuthors)}
+
+# Dictionary - Key: file Value: Number
 fileNumber = {file: i for i, file in enumerate(set(files))}
 fileNumberArray = [fileNumber[file] for file in files]
 
