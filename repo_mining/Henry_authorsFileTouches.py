@@ -70,25 +70,34 @@ repo = 'scottyab/rootbeer'
 # token
 lstTokens = ["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", "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", "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 "]
 
-dictAuth = [] #Authors + Dates
-files = [] #File data
+# List to store author,date and file data
+dictAuth = []
+files = []
+
+# Extract repository name
 data = repo.split('/')[1]
+
+# Open and read the CSV file containing commit data
 with open('data/file_'+ data + '.csv') as file:
     csvFile = csv.DictReader(file)
+    # Iterate through each row in the CSV file and append filenames to the 'files' list
     for row in csvFile:
         files.append(row['Filename'])
-  
+
 countfiles(files, dictAuth, lstTokens, repo)
 print('Total number of commits: ' + str(len(dictAuth)))
 
-# change this to the path of your file
+# Specify the output file path
 fileOutput = 'data/authors_' + data + '.csv'
-rows = ["Filename", "Author", "Date"]
+# Create the CSV file for writing
 fileCSV = open(fileOutput, 'w')
 writer = csv.writer(fileCSV)
+rows = ["Filename", "Author", "Date"]
 writer.writerow(rows)
 
+# Iterate through each dictionary in 'dictAuth' and write the relevant information to the CSV file
 for i in dictAuth:
-    rows = [i['file'],i['author'],i['date']]
+    rows = [i['file'], i['author'], i['date']]
     writer.writerow(rows)
+
 fileCSV.close()
