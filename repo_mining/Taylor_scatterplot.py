@@ -10,10 +10,18 @@ def generate_random_color():
   return "#{:06x}".format(random.randint(0, 0xFFFFFF))
 ##########################################################
 def map_author_to_color(authors):
-  author_color_map = {}
-  for author in set(authors):
-    author_color_map[author] = generate_random_color()
-  return author_color_map
+    author_color_map = {}
+    used_colors = set()  # Track used colors
+
+    for author in set(authors):
+        while True:
+            color = generate_random_color()
+            if color not in used_colors:
+                used_colors.add(color)
+                author_color_map[author] = color
+                break
+
+    return author_color_map
 ##########################################################
 def map_file_to_number(files):
   file_to_integer_mapping = {}
