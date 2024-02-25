@@ -24,6 +24,14 @@ def github_auth(url, lsttoken, ct):
 # @dictFiles, empty dictionary of files
 # @lstTokens, GitHub authentication tokens
 # @repo, GitHub repo
+"""
+Countfiles, is designed to fetch commit data from a GitHub repository, 
+extract details about files modified in each commit, and store relevant information in a list. 
+The extracted information includes file names, authors, and commit dates for Java files specifically. 
+The function utilizes GitHub API calls, with token-based authentication using lsttokens. 
+The retrieved data is then processed and appended to the dictAuth list. 
+Exit upon error.
+"""
 def countfiles(dictfiles, lsttokens, repo):
     ipage = 1  # url page counter
     ct = 0  # token counter
