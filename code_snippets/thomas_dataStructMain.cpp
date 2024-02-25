@@ -1,16 +1,3 @@
-/// ##################################################################
-/// Name: Thomas Bryant
-/// NSHE ID: 2000193948
-/// Course: CS302
-/// Section: 1003
-/// Semester: SPRING2023
-/// Assignment: Assignment #1 Revised, Program Test File
-/// Description: This program will first show a doubly linked list
-/// including functions to insert, delete, and implement a dummy node.
-/// This also includes the insertion sort for a doubly linked list.
-/// Secondly, it will show the insertion sort on an array.
-/// ##################################################################
-
 #include <iostream>
 #include "dblLinkedList.h"
 #include "insertionSort.h"
